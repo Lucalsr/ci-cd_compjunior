@@ -152,7 +152,7 @@ class AuthController {
 
             await prisma.user.update({
                 where: { id: decoded.userId },
-                data: { password: hashedPassword },
+                data: { updatedAt: new Date() },
             });
 
             res.json({

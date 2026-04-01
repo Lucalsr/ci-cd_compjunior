@@ -1,86 +1,51 @@
-# NaSalinha - Sistema de Check-in Gamificado
+# Desafio QA: Ecossistema NaSalinha (Comp Júnior)
 
-![Node.js](https://img.shields.io/badge/Node.js-18+-green)
-![React](https://img.shields.io/badge/React-18+-blue)
-![Docker](https://img.shields.io/badge/Docker-Ready-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+Este repositório contém o ambiente de homologação do projeto **NaSalinha**, um sistema de check-in gamificado.
 
-## Sobre o Projeto
+> Nota de Liderança (Gestão 2026.1)
+Este ambiente foi preparado especificamente para o treinamento de novos Analistas de Quality Assurance. O sistema contém **inconsistências propositais** para testar sua capacidade de auditoria, configuração de ambiente e reporte de bugs.
 
-O **NaSalinha** é um sistema de check-in gamificado desenvolvido para a **Comp Júnior** que incentiva a presença dos membros através de um sistema de pontos e rankings sazonais.
 
-### Funcionalidades
+## Créditos de Desenvolvimento
+O projeto original foi desenvolvido por **Lucas Henrique Lopes Costa** (Ex-Trainee da Comp Júnior) como parte de sua trilha de capacitação técnica. 
+A manutenção atual e a coordenação deste desafio são de responsabilidade da **Diretoria de Projetos**.
 
-- **Check-in por Foto** - Membros fazem check-in enviando uma foto como prova
-- **Sistema de Pontos** - Cada check-in válido gera pontos
-- **Rankings Sazonais** - Competição amigável entre membros
-- **Gestão de Usuários** - Sistema de roles (Admin, Membro, Trainee)
-- **Temporadas** - Períodos definidos de competição
-- **Autenticação JWT** - Sistema seguro de login
+---
+
+## O Objetivo do Treinamento
+Sua missão como trainee de QA é atuar como a última linha de defesa antes do "deploy" em produção:
+1. **Mapear Bugs:** Encontrar falhas de segurança, erros de pontuação e problemas de interface.
+2. **Configuração de Infra:** Garantir que todos os serviços externos estejam integrados corretamente.
+3. **Validar Regras de Negócio:** Garantir que permissões de usuário (Admin vs Trainee) e cálculos de ranking estejam íntegros.
+
+---
 
 ## Tecnologias Utilizadas
+* **Backend:** Node.js, Express, Prisma ORM.
+* **Frontend:** React 18, TailwindCSS.
+* **Banco de Dados:** PostgreSQL (via Docker).
+* **Serviços:** Cloudinary (Imagens) e Nodemailer/Mailtrap (E-mails).
 
-### Backend
-
-- **Node.js** com **Express** - Framework web rápido e minimalista
-- **PostgreSQL** - Banco de dados relacional robusto
-- **Prisma ORM** - ORM moderno com type-safety
-- **JWT** - Autenticação segura com tokens
-- **Cloudinary** - Armazenamento de imagens na nuvem
-- **Nodemailer** - Sistema de envio de e-mails
-- **Jest & Supertest** - Testes automatizados
-- **Docker** - Containerização da aplicação
-
-### Frontend
-
-- **React 18** - Biblioteca para interfaces modernas
-- **React Router** - Navegação entre páginas
-- **Axios** - Cliente HTTP para consumir a API
-- **TailwindCSS** - Framework CSS utilitário
-- **React Icons** - Ícones modernos
-- **Docker** - Containerização da aplicação
-
-## Pré-requisitos
-
-- Docker e Docker Compose instalados
-- Node.js 18+ (para desenvolvimento local)
-- Git
+---
 
 ## Como Executar o Projeto
 
-### Usando Docker
+### 1. Preparação
+Certifique-se de ter o **Docker** e **Git** instalados.
 
-1. **Clone o repositório**
+### 2. Configuração de Variáveis (O Primeiro Desafio)
+Vá até a pasta `/backend`, copie o arquivo `.env.example` para um novo arquivo `.env`.
 
-```bash
-git clone https://github.com/Lucas-Henrique-Lopes-Costa/compjunior.git
-cd compjunior
-```
+>important Configuração de Chaves Obrigatória
+Para que o sistema funcione, você deve criar suas próprias contas (gratuitas) nos serviços abaixo:
+* **E-mails:** Utilize o [Mailtrap](https://mailtrap.io/) (Sandbox).
+* **Fotos:** Utilize o [Cloudinary](https://cloudinary.com/).
 
-2. **Configure as variáveis de ambiente**
+Preencha as credenciais no seu `.env`. Identificar se o erro é de **configuração** ou de **código** faz parte do seu teste!
 
-```bash
-# Backend
-cp backend/.env.example backend/.env
-# Edite o arquivo backend/.env com suas credenciais
-```
 
-3. **Execute com Docker Compose**
-
-#### Backend
-
-```bash
-cd backend
-npm install
-```
-
-#### Frontend
-
-```bash
-cd frontend
-npm install
-```
-
+### 3. Execução com Docker
+Na raiz do projeto, suba os containers:
 ```bash
 docker-compose up --build
 ```
@@ -91,44 +56,7 @@ Rode o comando para executar as migrations e seeders do backend:
 docker-compose exec backend npx prisma migrate dev --name init
 docker-compose exec backend npx prisma db seed
 ```
-
-### #Prisma Studio (Gerenciar Banco de Dados)
-
-Para abrir o Prisma Studio e gerenciar o banco de dados visualmente:
-
-```bash
-docker exec -d nasalinha-backend npx prisma studio --browser none --port 5555
-```
-
-4. **Acesse a aplicação**
-
-- Frontend: <http://localhost:3000>
-- Backend: <http://localhost:5001>
-- API Docs: <http://localhost:5001/api-docs>
-- Prisma Studio: <http://localhost:5555>
-
-## Documentação da API
-
-A documentação completa da API está disponível em `/backend/API_DOCS.md` e também através do Swagger UI em `http://localhost:5001/api-docs` quando o servidor está rodando.
-
-### Principais Endpoints
-
-- **Auth**: `/api/auth/register`, `/api/auth/login`
-- **Users**: `/api/users` (CRUD completo)
-- **Check-ins**: `/api/checkins` (CRUD completo)
-- **Rankings**: `/api/rankings`
-- **Seasons**: `/api/seasons` (CRUD completo - Admin only)
-
-## Testes
-
-### Backend
-
-```bash
-cd backend
-npm test                  # Todos os testes
-npm run test:watch        # Modo watch
-npm run test:coverage     # Relatório de cobertura
-```
+FRONTEND_URL=http://localhost:3000
 
 ## Níveis de Usuário
 
@@ -136,14 +64,13 @@ npm run test:coverage     # Relatório de cobertura
 - **Membro** - Check-ins, visualização de ranking
 - **Trainee** - Check-ins e pontuação
 
-## Design e Responsividade
+## Principais Endpoints
 
-A interface foi desenvolvida seguindo princípios de:
-
-- Mobile First
-- Design responsivo para todas as telas
-- Acessibilidade (WCAG 2.1)
-- UX intuitiva e agradável
+- **Auth**: `/api/auth/register`, `/api/auth/login`
+- **Users**: `/api/users` (CRUD completo)
+- **Check-ins**: `/api/checkins` (CRUD completo)
+- **Rankings**: `/api/rankings`
+- **Seasons**: `/api/seasons` (CRUD completo - Admin only)
 
 ## Estrutura do Banco de Dados
 
@@ -173,47 +100,3 @@ A interface foi desenvolvida seguindo princípios de:
 
 - Confirmação de cadastro
 - Recuperação de senha
-
-## Funcionalidades "Ir Além" Implementadas
-
-- Testes automatizados (Jest, Supertest)
-- Integração com API externa (Cloudinary)
-- Sistema de envio de e-mails (Nodemailer)
-- Versionamento correto de código no Git
-- Commits descritivos e bem organizados
-- Componentização máxima no frontend
-
-## Cronograma de Desenvolvimento
-
-### Semanas 1-2: Fundação
-
-- Setup do projeto (backend + frontend)
-- Banco de dados PostgreSQL com Prisma
-- Docker e Docker Compose
-- Estrutura de pastas
-
-### Semana 3: Autenticação
-
-- Sistema de registro e login
-- JWT tokens
-- Middleware de autenticação
-- Recuperação de senha
-
-### Semanas 4-5: CRUD e Features
-
-- CRUD completo de usuários
-- CRUD completo de check-ins
-- CRUD completo de temporadas
-- Sistema de pontos
-- Rankings
-
-### Semana 6: Finalização
-
-- Testes automatizados
-- Documentação completa
-- Refinamentos de UX
-- Deploy com Docker
-
-## Licença
-
-Este projeto está sob a licença MIT.
