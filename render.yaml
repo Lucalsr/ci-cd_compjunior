@@ -1,0 +1,40 @@
+databases:
+  - name: nasalinha-db
+    databaseName: nasalinha_db
+    user: nasalinha
+    plan: free # Você pode alterar para 'starter' se precisar de persistência além de 90 dias
+
+services:
+  # Backend API
+  - type: web
+    name: nasalinha-backend
+    env: docker
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    plan: starter # Discos para uploads exigem plano pago (starter em diante)
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nasalinha-db
+          property: connectionString
+      # Adicione aqui as outras variáveis que estavam no seu .env
+      # - key: MINHA_CHAVE
+      #   value: valor_secreto
+    disk:
+      name: uploads-data
+      mountPath: /app/uploads
+      sizeGB: 1
+
+  # Frontend React
+  - type: web
+    name: nasalinha-frontend
+    env: docker
+    dockerContext: ./frontend
+    dockerfilePath: ./frontend/Dockerfile
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: nasalinha-backend
+          property: host
