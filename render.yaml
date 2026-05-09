@@ -1,44 +1,36 @@
 # render.yaml
 databases:
-  # Substitui o serviço 'db' do seu docker-compose
   - name: nasalinha-db
     databaseName: nasalinha_db
     user: nasalinha
-    plan: free # Pode alterar para 'starter' ou superior dependendo da necessidade
+    plan: free # O banco free expira após 90 dias no Render
 
 services:
-  # Substitui o serviço 'backend'
+  # Backend API
   - type: web
     name: nasalinha-backend
-    env: docker # Usa o seu Dockerfile
-    rootDir: backend # Caminho da pasta context do docker-compose
-    dockerfilePath: Dockerfile # Caminho relativo ao rootDir
+    env: docker
+    rootDir: backend
+    dockerfilePath: Dockerfile
     plan: free
-    disk:
-      # Substitui o volume 'uploads_data'
-      name: uploads_data
-      mountPath: /app/uploads
-      sizeGB: 1
+    # REMOVIDO: Seção de disk (não suportada no Free)
     envVars:
-      # Conecta o backend automaticamente ao banco PostgreSQL criado acima
       - key: DATABASE_URL
         fromDatabase:
           name: nasalinha-db
           property: connectionString
-      # Adicione outras variáveis do seu ./backend/.env aqui
       - key: PORT
         value: "5001"
+      # Como não há persistência de disco, se você usa o /app/uploads,
+      # os arquivos serão apagados a cada novo deploy ou reinicialização.
 
-  # Substitui o serviço 'frontend'
-  - type: web # Se o frontend for puramente estático (ex: sem SSR), usar 'type: static' é mais barato e rápido
+  # Frontend React
+  - type: web
     name: nasalinha-frontend
     env: docker
     rootDir: frontend
     dockerfilePath: Dockerfile
     plan: free
     envVars:
-      # Muito Importante: No Render, o frontend não acessa o backend via localhost.
-      # Substitua ".onrender.com" pelo domínio real que o Render vai gerar,
-      # ou use o nome previsível caso você não altere o nome do serviço.
       - key: REACT_APP_API_URL
         value: https://nasalinha-backend.onrender.com/api
