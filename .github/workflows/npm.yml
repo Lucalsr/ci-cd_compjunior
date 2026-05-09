@@ -16,3 +16,16 @@ jobs:
           
       - run: npm install 
       - run: npm run test
+  build2:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - run: npm install 
+      - run: npm run test
